@@ -3,7 +3,15 @@
 @section('title', 'POS')
 
 @section('additional-css')
-    <style>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .select2-container {
+            display: block
+        }
+
+        .select2-container .select2-selection--single {
+            height: 36px;
+        }
         .center{
             width: 150px;
             margin: 40px auto;
@@ -32,6 +40,9 @@
                                 <input class="form-control" id="searchCustomer" class="search-input" type="text" placeholder="Search Customer by Code or Name" />
                                 <span class="span-right-input-icon"><i class="search-icon text-muted i-Magnifi-Glass1"></i></span>
                             </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <select name="warehouse" id="find-item" class="form-control"></select>
                         </div>
                         <div class="col-lg-12">
                             <table class="table table-sm">
@@ -105,7 +116,7 @@
                         </div>
                         
                         <div class="col-lg-12">
-                            <table class="table table-sm">
+                            <table id="tbl-material-list" class="table table-sm">
                                 <thead>
                                     <th>#</th>
                                     <th>Product ID</th>
@@ -128,8 +139,12 @@
 @endsection
 
 @section('additional-js')
+<script src="{{ asset('/assets/js/select2.min.js') }}"></script>
 <script>
+    // alert(base_url)
     $(function(){
+        let _token   = $('meta[name="csrf-token"]').attr('content');
+
         $('.btn-number').click(function(e){
             e.preventDefault();
             
@@ -199,7 +214,96 @@
                     e.preventDefault();
                 }
         });
+        
+        $(document).on('select2:open', (event) => {
+            const searchField = document.querySelector(
+                `.select2-search__field`,
+            );
+            if (searchField) {
+                searchField.focus();
+            }
+        });
+
+        $('#find-item').select2({
+            placeholder: 'Type Item Code or Description',
+            width: '100%',
+            minimumInputLength: 0,
+            ajax: {
+                url: base_url + '/finditemmaster',
+                dataType: 'json',
+                delay: 250,
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': _token
+                },
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        // custname: $('#find-customer').val()
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    // return {
+                    //     results: response
+                    // };
+                    console.log(data)
+                    return {
+                        results: $.map(data.data, function (item) {
+                            return {
+                                text: item.description,
+                                slug: item.description,
+                                id: item.item_code,
+                                ...item
+                            }
+                        })
+                    };
+                },
+                cache: true
+            }
+        });
+
+        $('#find-item').on('change', function(){
+            // alert(this.value)
             
+            var data = $('#find-item').select2('data')
+            console.log(data);
+
+            // alert(data[0].material);
+            // $('#partdesc'+fCount).val(data[0].partname);
+            // $('#partunit'+fCount).val(data[0].matunit);
+        });
+
+        loadItemMaster();
+        function loadItemMaster(){
+            $("#tbl-material-list").DataTable({
+                serverSide: true,
+                ajax: {
+                    url: base_url+'/itemmaster',
+                    data: function (data) {
+                        data.params = {
+                            sac: "sac"
+                        }
+                    }
+                },
+                buttons: false,
+                columns: [
+                    { "data": null,"sortable": false, "searchable": false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        }  
+                    },
+                    {data: "item_code", className: 'uid'},
+                    {data: "description", className: 'fname'},
+                    {data: "description", className: 'fname'},
+                    {data: "quantity", className: 'fname'},
+                    {"defaultContent": 
+                        "<button type='button' class='btn btn-primary btn-sm button-add-material'> <i class='fa fa-plus'></i> Add</button>"
+                    }
+                ],
+                "bDestroy": true,
+            });
+        }
     })
 </script>
 @endsection

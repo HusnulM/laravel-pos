@@ -5,13 +5,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title')</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,400i,600,700,800,900" rel="stylesheet" />
     <link href="{{ asset('/assets/css/themes/lite-purple.min.css') }}" rel="stylesheet" />
     <link href="{{ asset('assets/css/plugins/perfect-scrollbar.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/plugins/datatables.min.css') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 
     @yield('additional-css')
+
+    <script>
+        var base_url = window.location.origin;
+    </script>
 </head>
 
 <body class="text-left">
@@ -371,6 +377,8 @@
     <script src="{{ asset('/assets/js/scripts/echart.options.min.js') }}"></script>
     <script src="{{ asset('/assets/js/scripts/dashboard.v1.script.min.js') }}"></script>
     <script src="{{ asset('/assets/js/scripts/customizer.script.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/plugins/datatables.min.js') }}"></script>
+    <script src="{{ asset('/assets/js/scripts/datatables.script.min.js') }}"></script>
 
     @yield('additional-js')
 </body>

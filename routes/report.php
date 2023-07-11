@@ -12,18 +12,3 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('dashboard');
-});
-
-Route::get('pos', function () {
-    return view('pos.index');
-});
-
-Route::get('login', function () {
-    return view('login');
-});
-
-Route::post('/finditemmaster', 'Master\ItemMasterController@findItem');
-Route::get('/itemmaster', 'Master\ItemMasterController@itemList');
