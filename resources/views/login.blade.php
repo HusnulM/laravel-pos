@@ -9,6 +9,8 @@
     <link href="{{ asset('/assets/css/themes/lite-purple.min.css') }}" rel="stylesheet">
 </head>
 <div class="auth-layout-wrap" style="background-image: url({{ asset('/assets/images/photo-wide-4.jpg') }})">
+    <form action="{{ url('authenticate') }}" method="post">
+    @csrf
     <div class="auth-content">
         <div class="card o-hidden">
             <div class="row">
@@ -18,12 +20,12 @@
                         <h1 class="mb-3 text-18">Sign In</h1>
                         <form>
                             <div class="form-group">
-                                <label for="email">Email address / Username</label>
-                                <input class="form-control form-control-rounded" id="email" type="text">
+                                <label for="username">Email address / Username</label>
+                                <input class="form-control form-control-rounded" name="username" id="username" type="text">
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
-                                <input class="form-control form-control-rounded" id="password" type="password">
+                                <input class="form-control form-control-rounded" name="password" id="password" type="password">
                             </div>
                             <button class="btn btn-rounded btn-primary btn-block mt-2">Sign In</button>
                         </form>
@@ -37,4 +39,5 @@
             </div>
         </div>
     </div>
+    </form>
 </div>

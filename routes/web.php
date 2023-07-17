@@ -13,17 +13,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
+// Route::get('/', function () {
+//     return view('dashboard');
+// });
+
+// Route::get('pos', function () {
+//     return view('pos.index');
+// });
+
+// Route::get('login', function () {
+//     return view('login');
+// });
+
+
+Route::group(['middleware' => 'guest'], function(){
+    Route::group(['middleware' => 'revalidate'], function () {
+        Route::get('/',              'HomeController@index')->name('login');
+        Route::post('authenticate',  'HomeController@login');
+    });
 });
 
-Route::get('pos', function () {
-    return view('pos.index');
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'revalidate'], function () {
+        Route::get('/dashboard',      'HomeController@dashboard');
+        Route::post('logout',         'HomeController@logout')->name('logout');
+        Route::get('logout2',         'HomeController@logout')->name('logout');
+        Route::post('changepassword', 'HomeController@changepassword')->name('changepassword');
+    });
+    
+    Route::get('pos', function () {
+        return view('pos.index');
+    });
+    Route::post('/finditemmaster', 'Master\ItemMasterController@findItem');
+    Route::get('/itemmaster', 'Master\ItemMasterController@itemList');
 });
-
-Route::get('login', function () {
-    return view('login');
-});
-
-Route::post('/finditemmaster', 'Master\ItemMasterController@findItem');
-Route::get('/itemmaster', 'Master\ItemMasterController@itemList');

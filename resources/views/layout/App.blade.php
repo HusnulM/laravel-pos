@@ -172,11 +172,17 @@
                         <img src="{{ asset('/assets/images/faces/1.jpg') }}" id="userDropdown" alt="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
                             <div class="dropdown-header">
-                                <i class="i-Lock-User mr-1"></i> Timothy Carlson
+                                <i class="i-Lock-User mr-1"></i> {{ Auth::user()->real_name }}
                             </div>
                             <a class="dropdown-item">Account settings</a>
                             <a class="dropdown-item">Billing history</a>
-                            <a class="dropdown-item" href="signin.html">Sign out</a>
+                            <form id="logout-form" method="post" action="{{ url('logout') }}">
+                                @csrf
+                                <a class="dropdown-item" href="javascript:{}" onclick="document.getElementById('logout-form').submit();" title="Logout">Sign out</a>
+                                {{-- <a href="javascript:{}" class="nav-link" onclick="document.getElementById('logout-form').submit();" title="Logout">
+                                  <i class="fa fa-solid fa-power-off"></i> 
+                                </a> --}}
+                            </form>
                         </div>
                     </div>
                 </div>
